@@ -1,4 +1,4 @@
-# 777 Fruit Demo
+# 777 Fruit 
 
 Virtual-points-only fruit slot demo. It has no deposits, withdrawals, cash prizes, or real-money wagering.
 
