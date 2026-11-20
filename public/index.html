@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="az"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>777 Kazino — virtual oyun</title>
-
-/* MODERN SLOT DESIGN */
+  
 .games {
   display: grid;
   grid-template-columns: 1fr;
@@ -9,35 +8,28 @@
 }
 
 .game {
-  position: relative;
-  overflow: hidden;
-  text-align: center;
-  margin: 0;
   padding: 20px 14px;
   border: 2px solid #d5a52e;
   border-radius: 22px;
-  background:
-    radial-gradient(circle at top, #49300d, #171006 55%, #080808);
-  box-shadow: 0 0 18px #d49a263d, inset 0 0 20px #000;
+  background: radial-gradient(circle at top, #49300d, #171006 55%, #080808);
+  box-shadow: 0 0 18px #d49a263d;
+  text-align: center;
 }
 
 .game h3 {
   color: #ffe08a;
   font-size: 19px;
-  letter-spacing: 2px;
   text-shadow: 0 0 12px #ffbf35;
 }
 
 .reels {
   display: flex;
   gap: 9px;
-  justify-content: center;
   padding: 14px 8px;
   margin: 16px 0;
   border: 3px solid #d9a52f;
   border-radius: 17px;
-  background: linear-gradient(135deg,#080808,#292015,#080808);
-  box-shadow: 0 0 20px #ffbd3945;
+  background: #100d08;
 }
 
 .reel {
@@ -46,12 +38,9 @@
   align-items: center;
   min-height: 85px;
   background: linear-gradient(#fff4d5,#d9c18b);
-  color: #9b1717;
-  border: 2px solid #fff0b5;
   border-radius: 12px;
   font-size: 39px;
   flex: 1;
-  box-shadow: inset 0 0 12px #8a5a16;
 }
 
 .reel.spinning {
@@ -60,17 +49,9 @@
 }
 
 @keyframes reelMove {
-  0% { transform: translateY(-5px); }
   50% { transform: translateY(5px); }
-  100% { transform: translateY(-5px); }
 }
 
-.game .btn {
-  font-size: 17px;
-  padding: 15px;
-  border-radius: 30px;
-  box-shadow: 0 0 16px #f5bd4b77;
-}
 <style>
 :root{--g:#f4c451;--bg:#080808;--p:#17130c;--mut:#c9b98f}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#33220b,#080808 48%);color:#fff;font-family:Arial,sans-serif}.wrap{max-width:520px;margin:auto;padding:14px}.top,.panel,.game{border:1px solid #a9781d;border-radius:16px;background:#100e0a;padding:14px;margin-bottom:12px}.top{display:flex;justify-content:space-between;align-items:center}.logo{font-size:26px;font-weight:900;color:var(--g)}.tag{font-size:11px;color:var(--mut)}h1{text-align:center;color:var(--g);font-size:30px;margin:18px 0 5px}p{color:var(--mut);font-size:13px;line-height:1.5}.balance{font-size:23px;color:var(--g);font-weight:bold}.btn{width:100%;border:1px solid #a9781d;border-radius:11px;padding:12px;background:linear-gradient(#f6d77e,#b97a15);color:#1a1003;font-weight:bold;margin-top:8px;cursor:pointer}input,select{width:100%;padding:12px;border-radius:10px;border:1px solid #71511b;background:#080808;color:white;margin:5px 0}.row{display:flex;gap:8px}.row>*{flex:1}.games{display:grid;grid-template-columns:1fr 1fr;gap:10px}.game{text-align:center;margin:0}.game h3{color:var(--g);font-size:14px}.reels{display:flex;gap:4px;justify-content:center}.reel{background:#f3e5c2;color:#991b12;border-radius:7px;padding:12px 3px;font-size:24px;flex:1}.hidden{display:none}.msg{font-size:12px;color:#ffe3a0;min-height:18px}.small{font-size:11px;color:#a99b78}.listitem{border-top:1px solid #493819;padding:9px 0;font-size:12px}.pill{color:var(--g)}@media(max-width:360px){.games{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
