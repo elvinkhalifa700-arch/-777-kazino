@@ -40,12 +40,90 @@ db.exec(`
 
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json({ limit: "20kb" }));
+db.exec(`
+  CREATE TABLE IF NOT EXISTS sessions (
+    sid TEXT PRIMARY KEY,
+    sess TEXT NOT NULL,
+    expire INTEGER NOT NULL
+  )
+`);
+
+class SQLiteStore extends session.Store {
+  get(sid, callback) {
+    try {
+      const row = db.prepare(
+        "SELECT sess, expire FROM sessions WHERE sid=?"
+      ).get(sid);
+
+      if (!row || row.expire <= Date.now()) {
+        db.prepare("DELETE FROM sessions WHERE sid=?").run(sid);
+        return callback(null, null);
+      }
+
+      callback(null, JSON.parse(row.sess));
+    } catch (err) {
+      callback(err);
+    }
+  }
+
+  set(sid, sess, callback = () => {}) {
+    try {
+      const expire = sess.cookie?.expires
+        ? new Date(sess.cookie.expires).getTime()
+        : Date.now() + 8 * 60 * 60 * 1000;
+
+      db.prepare(`
+        INSERT INTO sessions (sid, sess, expire)
+        VALUES (?, ?, ?)
+        ON CONFLICT(sid) DO UPDATE SET
+        sess=excluded.sess, expire=excluded.expire
+      `).run(sid, JSON.stringify(sess), expire);
+
+      callback(null);
+    } catch (err) {
+      callback(err);
+    }
+  }
+
+  destroy(sid, callback = () => {}) {
+    try {
+      db.prepare("DELETE FROM sessions WHERE sid=?").run(sid);
+      callback(null);
+    } catch (err) {
+      callback(err);
+    }
+  }
+
+  touch(sid, sess, callback = () => {}) {
+    try {
+      const expire = sess.cookie?.expires
+        ? new Date(sess.cookie.expires).getTime()
+        : Date.now() + 8 * 60 * 60 * 1000;
+
+      db.prepare("UPDATE sessions SET expire=? WHERE sid=?")
+        .run(expire, sid);
+
+      callback(null);
+    } catch (err) {
+      callback(err);
+    }
+  }
+}
+
+app.set("trust proxy", 1);
+
 app.use(session({
+  store: new SQLiteStore(),
   name: "777demo.sid",
   secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", maxAge: 8 * 60 * 60 * 1000 }
+  cookie: {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: true,
+    maxAge: 8 * 60 * 60 * 1000
+  }
 }));
 app.use("/api/", rateLimit({ windowMs: 15 * 60 * 1000, limit: 120 }));
 app.use(express.static(path.join(__dirname, "public")));
