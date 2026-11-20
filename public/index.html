@@ -4,206 +4,204 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>777 Kazino — Virtual Demo</title>
+<meta name="theme-color" content="#080808">
+<title>777 Kazino</title>
 
 <style>
-:root {
-  --gold: #f5c451;
-  --dark: #090909;
-  --panel: #171109;
-  --muted: #c9b98f;
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:#080808;
+  color:#fff;
+  font-family:Arial,sans-serif;
 }
-
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: radial-gradient(ellipse at top, #39240b, #080808 65%);
-  color: white;
-  font-family: Arial, sans-serif;
-  min-height: 100vh;
+button,input{font:inherit}
+.wrap{max-width:650px;margin:auto;padding:18px}
+header{text-align:center;padding:22px 10px}
+.logo{
+  color:#f6c453;
+  font-size:42px;
+  font-weight:900;
+  text-shadow:0 0 18px #b98216;
 }
-
-.wrap {
-  width: 100%;
-  max-width: 560px;
-  margin: auto;
-  padding: 14px;
+.subtitle{color:#aaa;font-size:13px;margin-top:5px}
+.panel{
+  background:#151515;
+  border:1px solid #5e471a;
+  border-radius:17px;
+  padding:18px;
+  margin:15px 0;
+  box-shadow:0 0 18px #000;
 }
-
-.top, .panel {
-  background: linear-gradient(145deg, #211707, #0c0b09);
-  border: 1px solid #a9781d;
-  border-radius: 17px;
-  padding: 15px;
-  margin-bottom: 14px;
+h2,h3{color:#f6c453;margin-top:0}
+input{
+  width:100%;
+  padding:14px;
+  border:1px solid #66501d;
+  background:#090909;
+  color:white;
+  border-radius:10px;
+  margin:8px 0;
+  outline:none;
 }
-
-.top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.btn{
+  border:0;
+  border-radius:10px;
+  padding:13px 16px;
+  background:linear-gradient(135deg,#f5d36b,#b77a14);
+  color:#17100a;
+  font-weight:bold;
+  cursor:pointer;
+  width:100%;
+  margin:7px 0;
 }
-
-.logo {
-  color: var(--gold);
-  font-size: 25px;
-  font-weight: 900;
-  text-shadow: 0 0 15px #ffbd35;
+.btn:disabled{opacity:.5}
+.secondary{
+  background:#292929;
+  color:#f6c453;
+  border:1px solid #66501d;
 }
-
-.tag, .small {
-  color: var(--muted);
-  font-size: 11px;
+.hidden{display:none!important}
+.msg{color:#f6c453;font-size:14px;margin-top:10px;overflow-wrap:anywhere}
+.balance{
+  color:#f6d477;
+  font-size:25px;
+  font-weight:bold;
+  margin:12px 0;
 }
-
-h1 {
-  color: var(--gold);
-  text-align: center;
-  font-size: 29px;
-  text-shadow: 0 0 15px #c58a20;
+.games{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
 }
-
-h3 { color: var(--gold); }
-
-p {
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.5;
+.game-card{
+  border:1px solid #73551c;
+  border-radius:15px;
+  background:linear-gradient(145deg,#262016,#101010);
+  padding:20px 10px;
+  text-align:center;
+  cursor:pointer;
 }
-
-.balance {
-  color: var(--gold);
-  font-size: 25px;
-  font-weight: bold;
-  margin: 8px 0;
+.game-icon{font-size:42px;margin-bottom:12px}
+.game-name{font-weight:bold;color:#f6c453}
+.game-card p{font-size:12px;color:#aaa}
+.listitem{
+  border:1px solid #51401f;
+  border-radius:12px;
+  padding:12px;
+  margin:10px 0;
 }
-
-input {
-  width: 100%;
-  padding: 14px;
-  margin: 6px 0;
-  border-radius: 10px;
-  border: 1px solid #8e671f;
-  background: #080808;
-  color: white;
-  font-size: 15px;
-}
-
-.btn {
-  width: 100%;
-  padding: 14px;
-  margin-top: 9px;
-  border: 1px solid #ffe08a;
-  border-radius: 30px;
-  background: linear-gradient(135deg, #ffe28a, #c18419);
-  color: #211400;
-  font-weight: 900;
-  font-size: 15px;
-  cursor: pointer;
-  box-shadow: 0 0 15px #d99d3455;
-}
-
-.btn:active { transform: scale(.97); }
-.btn:disabled { opacity: .6; }
-
-.hidden { display: none !important; }
-
-.msg {
-  color: #ffe3a0;
-  font-size: 12px;
-  margin-top: 8px;
-  min-height: 18px;
-}
-
-.games {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
-}
-
-.game {
-  position: relative;
-  overflow: hidden;
-  text-align: center;
-  padding: 20px 13px;
-  border: 2px solid #d4a32f;
-  border-radius: 22px;
+.small{color:#999;font-size:12px}
+.full-game{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  overflow-y:auto;
   background:
-    radial-gradient(ellipse at top, #49300d, #171006 60%, #080808);
-  box-shadow: 0 0 23px #d49a2640, inset 0 0 25px #000;
+    radial-gradient(ellipse at top,#4b3510 0%,#171006 35%,#050505 75%);
+  padding:15px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  min-height:100vh;
+  min-height:100dvh;
 }
-
-.game h2 {
-  color: #ffe08a;
-  font-size: 20px;
-  letter-spacing: 2px;
-  text-shadow: 0 0 13px #ffbf35;
-  margin: 5px 0 16px;
+.full-top{
+  width:100%;
+  max-width:550px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin:8px 0 35px;
 }
-
-.machine {
-  border: 3px solid #e3b640;
-  border-radius: 18px;
-  padding: 13px 8px;
-  background: linear-gradient(135deg, #050505, #30200c, #050505);
-  box-shadow: 0 0 20px #ffbd3960;
+.back-btn{
+  background:#242424;
+  color:#f6c453;
+  border:1px solid #74551d;
+  padding:12px 17px;
+  border-radius:10px;
 }
-
-.reels {
-  display: flex;
-  gap: 7px;
-  justify-content: center;
+.full-logo{
+  font-size:24px;
+  color:#f6c453;
+  font-weight:900;
 }
-
-.reel {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-  min-width: 0;
-  height: 85px;
-  border: 2px solid #fff0b5;
-  border-radius: 12px;
-  background: linear-gradient(#fff4d5, #d9c18b);
-  color: #991b12;
-  font-size: 38px;
-  box-shadow: inset 0 0 13px #8a5a16;
-  text-shadow: 0 2px 3px #fff;
+.light-title{
+  font-size:25px;
+  color:#ffdf82;
+  text-align:center;
+  font-weight:900;
+  text-shadow:0 0 18px #d18c1b;
+  margin:10px 0 35px;
 }
-
-.reel.spinning {
-  animation: reelMove .11s linear infinite;
-  filter: blur(2px);
+.machine-big{
+  width:100%;
+  max-width:520px;
+  padding:25px 12px;
+  border:3px solid #d9a52c;
+  border-radius:24px;
+  background:linear-gradient(145deg,#33250d,#100d08);
+  box-shadow:0 0 25px #bd831d, inset 0 0 20px #000;
 }
-
-@keyframes reelMove {
-  0% { transform: translateY(-5px); }
-  50% { transform: translateY(5px); }
-  100% { transform: translateY(-5px); }
+.machine-label{
+  text-align:center;
+  font-size:15px;
+  letter-spacing:4px;
+  color:#ffe18a;
+  margin-bottom:25px;
 }
-
-.game .btn {
-  font-size: 17px;
-  padding: 16px;
-  margin-top: 15px;
+.reels{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:9px;
 }
-
-.game-note {
-  color: #d6c18e;
-  font-size: 11px;
-  margin-top: 12px;
+.reel{
+  height:115px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(#fff4ce,#d8b96c,#fff0bd);
+  border:3px solid #a8791b;
+  border-radius:13px;
+  color:#111;
+  font-size:43px;
+  overflow:hidden;
 }
-
-.listitem {
-  border-top: 1px solid #493819;
-  padding: 12px 0;
-  font-size: 12px;
+.reel.spinning{
+  animation:glow .18s infinite alternate;
 }
-
-@media(max-width:360px) {
-  .reel { height: 70px; font-size: 30px; }
-  .logo { font-size: 21px; }
+@keyframes glow{
+  from{filter:brightness(1)}
+  to{filter:brightness(1.8)}
+}
+.full-message{
+  margin:30px 0 18px;
+  color:#ffe18a;
+  text-align:center;
+  font-size:16px;
+  min-height:22px;
+}
+.spin-big{
+  width:220px;
+  height:65px;
+  border:0;
+  border-radius:50px;
+  margin:10px auto 20px;
+  background:linear-gradient(135deg,#ffe58c,#d18b18);
+  color:#201300;
+  font-size:20px;
+  font-weight:900;
+  box-shadow:0 0 25px #d69b2d;
+}
+.full-note{
+  color:#999;
+  text-align:center;
+  font-size:12px;
+  margin:15px 0 25px;
+}
+@media(max-width:380px){
+  .reel{height:90px;font-size:34px}
+  .logo{font-size:35px}
 }
 </style>
 </head>
@@ -211,71 +209,74 @@ input {
 <body>
 <div class="wrap">
 
-<header class="top">
-  <div class="logo">👑 777 KAZİNO</div>
-  <div class="tag">AZ · TR · RU</div>
+<header>
+  <div class="logo">777 KAZİNO</div>
+  <div class="subtitle">VIRTUAL ENTERTAINMENT</div>
 </header>
 
-<section class="panel">
-  <div class="tag">VİRTUAL OYUN GÖSTƏRİCİSİ</div>
-  <div class="balance" id="balance">— demo xal</div>
-  <div class="small">Yalnız əyləncə üçündür. Real pul, mərc və nağdlaşdırma yoxdur.</div>
+<section class="panel" id="login">
+  <h2>Müştəri girişi</h2>
+  <p class="small">Sənə verilmiş giriş kodunu daxil et.</p>
+  <input id="code" placeholder="Müştəri kodu" autocomplete="off">
+  <button class="btn" onclick="login()">Daxil ol</button>
+  <div class="msg" id="loginMsg"></div>
 </section>
 
-<section id="login" class="panel">
-  <h3>🔐 Kodla giriş</h3>
-  <input id="code" placeholder="Sənə verilən giriş kodu">
-  <button class="btn" onclick="login()">DAXİL OL</button>
-  <div id="loginMsg" class="msg"></div>
+<section class="hidden" id="app">
+  <div class="panel">
+    <h3>👑 Xoş gəlmisən!</h3>
+    <div class="small">Sənin demo göstəricin</div>
+    <div class="balance" id="balance">0 demo xal</div>
+    <button class="btn secondary" onclick="refreshMe()">Yenilə</button>
+    <button class="btn secondary" onclick="logout()">Çıxış</button>
+  </div>
+
+  <div id="gameMenu" class="panel">
+    <h2>🎰 Oyunlar</h2>
+    <div class="games">
+      <div class="game-card" onclick="openGame('f')">
+        <div class="game-icon">🍒🍋🍇</div>
+        <div class="game-name">MEYVƏ SLOTU</div>
+        <p>Oyunu aç</p>
+      </div>
+
+      <div class="game-card" onclick="openGame('c')">
+        <div class="game-icon">7️⃣⭐🔔</div>
+        <div class="game-name">KLASSİK 777</div>
+        <p>Oyunu aç</p>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section id="app" class="hidden">
-
-  <div class="row">
-    <button class="btn" onclick="logout()">Çıxış</button>
-    <button class="btn" onclick="refreshMe()">Yenilə</button>
+<section id="fullGame" class="full-game hidden">
+  <div class="full-top">
+    <button class="back-btn" onclick="closeGame()">← Geri</button>
+    <div class="full-logo">777</div>
   </div>
 
-  <h1>777 KAZİNO</h1>
-  <p style="text-align:center">✨ Pulsuz slot əyləncə demoları ✨</p>
+  <div class="light-title" id="fullTitle">🍒 MEYVƏ SLOTU</div>
 
-  <div class="games">
-
-    <div class="game">
-      <h2>🍒 MEYVƏ SLOTU</h2>
-      <div class="machine">
-        <div class="reels">
-          <div class="reel" id="f1">🍒</div>
-          <div class="reel" id="f2">🍋</div>
-          <div class="reel" id="f3">🍇</div>
-        </div>
-      </div>
-      <button class="btn" id="fruitBtn" onclick="spin('f')">
-        ▶ PULSUZ SINA
-      </button>
-      <div class="game-note" id="fruitMsg">Meyvə simvollarını fırlat!</div>
+  <div class="machine-big">
+    <div class="machine-label">777 • DEMO SLOT • 777</div>
+    <div class="reels">
+      <div class="reel" id="g1">🍒</div>
+      <div class="reel" id="g2">🍋</div>
+      <div class="reel" id="g3">🍇</div>
     </div>
-
-    <div class="game">
-      <h2>👑 KLASSİK 777</h2>
-      <div class="machine">
-        <div class="reels">
-          <div class="reel" id="c1">7️⃣</div>
-          <div class="reel" id="c2">⭐</div>
-          <div class="reel" id="c3">7️⃣</div>
-        </div>
-      </div>
-      <button class="btn" id="classicBtn" onclick="spin('c')">
-        ▶ PULSUZ SINA
-      </button>
-      <div class="game-note" id="classicMsg">Klassik simvolları fırlat!</div>
-    </div>
-
   </div>
 
-  <p class="small" style="text-align:center">
-    Bütün fırlatmalar pulsuzdur. Demo xalları dəyişmir.
-  </p>
+  <div class="full-message" id="fullMessage">
+    Pulsuz demo oyuna xoş gəldin!
+  </div>
+
+  <button class="spin-big" id="bigSpin" onclick="spinFull()">
+    ⟳ FIRLAT
+  </button>
+
+  <div class="full-note">
+    Pulsuz virtual demo · Real pul və mərc yoxdur
+  </div>
 </section>
 
 <section class="panel">
@@ -291,10 +292,10 @@ input {
     <button class="btn" onclick="createCustomer()">Yeni müştəri kodu yarat</button>
     <div id="newCode" class="msg"></div>
 
-    <button class="btn" onclick="loadCustomers()">Müştəriləri yenilə</button>
+    <button class="btn secondary" onclick="loadCustomers()">Müştəriləri yenilə</button>
     <div id="customers"></div>
 
-    <button class="btn" onclick="adminLogout()">Admin çıxışı</button>
+    <button class="btn secondary" onclick="adminLogout()">Admin çıxışı</button>
   </div>
 </section>
 
@@ -324,11 +325,12 @@ function msg(id, text) {
 async function login() {
   try {
     const code = document.getElementById('code').value.trim();
+    if (!code) throw Error('Giriş kodunu yaz');
+
     await api('/api/login', 'POST', {code});
 
     document.getElementById('login').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
-
     await refreshMe();
   } catch(e) {
     msg('loginMsg', e.message);
@@ -350,35 +352,60 @@ async function logout() {
     await api('/api/logout', 'POST', {});
   } catch(e) {}
 
+  closeGame(true);
   document.getElementById('app').classList.add('hidden');
   document.getElementById('login').classList.remove('hidden');
 }
 
-const spinning = {f:false, c:false};
+let activeGame = 'f';
+let fullSpinning = false;
 
-function spin(prefix) {
-  if (spinning[prefix]) return;
+function openGame(type) {
+  activeGame = type;
 
-  spinning[prefix] = true;
+  document.getElementById('gameMenu').classList.add('hidden');
+  document.getElementById('fullGame').classList.remove('hidden');
 
-  const symbols = prefix === 'f'
+  document.getElementById('fullTitle').textContent =
+    type === 'f' ? '🍒 MEYVƏ SLOTU' : '👑 KLASSİK 777';
+
+  const symbols = type === 'f'
+    ? ['🍒','🍋','🍇']
+    : ['7️⃣','⭐','🔔'];
+
+  [1,2,3].forEach((n,i) => {
+    document.getElementById('g'+n).textContent = symbols[i];
+  });
+
+  document.getElementById('fullMessage').textContent =
+    'Pulsuz demo oyuna xoş gəldin!';
+}
+
+function closeGame(force=false) {
+  if (fullSpinning && !force) return;
+
+  document.getElementById('fullGame').classList.add('hidden');
+  document.getElementById('gameMenu').classList.remove('hidden');
+}
+
+function spinFull() {
+  if (fullSpinning) return;
+
+  fullSpinning = true;
+
+  const symbols = activeGame === 'f'
     ? ['🍒','🍋','🍇','🍉','🍊','🍓','🥝','🍍']
     : ['7️⃣','⭐','🔔','🍀','💎','👑'];
 
-  const reels = [1,2,3].map(i =>
-    document.getElementById(prefix + i)
+  const reels = [1,2,3].map(n =>
+    document.getElementById('g'+n)
   );
 
-  const button = document.getElementById(
-    prefix === 'f' ? 'fruitBtn' : 'classicBtn'
-  );
-
-  const message = document.getElementById(
-    prefix === 'f' ? 'fruitMsg' : 'classicMsg'
-  );
+  const button = document.getElementById('bigSpin');
+  const message = document.getElementById('fullMessage');
 
   button.disabled = true;
-  message.textContent = '✨ Simvollar fırlanır...';
+  message.textContent = '✨ Çarxlar fırlanır...';
 
   reels.forEach(el => el.classList.add('spinning'));
 
@@ -392,17 +419,20 @@ function spin(prefix) {
   setTimeout(() => {
     clearInterval(timer);
 
-    reels.forEach(el => {
-      el.textContent =
-        symbols[Math.floor(Math.random() * symbols.length)];
-      el.classList.remove('spinning');
+    reels.forEach((el, index) => {
+      setTimeout(() => {
+        el.textContent =
+          symbols[Math.floor(Math.random() * symbols.length)];
+        el.classList.remove('spinning');
+
+        if (index === 2) {
+          message.textContent = 'Demo fırlatma tamamlandı!';
+          button.disabled = false;
+          fullSpinning = false;
+        }
+      }, index * 350);
     });
-
-    message.textContent = '✨ Sınaq tamamlandı! Yenidən oynaya bilərsən.';
-    button.disabled = false;
-    spinning[prefix] = false;
-
-  }, 1600);
+  }, 1300);
 }
 
 async function adminLogin() {
@@ -490,6 +520,10 @@ async function adminLogout() {
   document.getElementById('admin').classList.add('hidden');
   document.getElementById('adminLogin').classList.remove('hidden');
 }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeGame();
+});
 </script>
 
 </body>
