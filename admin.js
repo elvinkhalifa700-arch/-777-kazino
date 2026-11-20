@@ -1,0 +1,5 @@
+const $=id=>document.getElementById(id);
+async function call(url,body={}){const r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});const d=await r.json();if(!r.ok)throw new Error(d.error||"Xəta");return d}
+$("login").onclick=async()=>{try{await call("/api/admin/login",{password:$("password").value});$("loginBox").classList.add("hidden");$("panel").classList.remove("hidden");$("message").textContent="Admin girişi uğurludur."}catch(e){$("message").textContent=e.message}};
+$("create").onclick=async()=>{try{const d=await call("/api/admin/codes",{amount:Number($("amount").value),count:Number($("count").value)});$("output").textContent=`Hər kod: ${d.amount} demo AZN\n\n${d.codes.join("\n")}\n\nKodları oyunçulara ver. Hər kod yalnız bir dəfə işləyir.`;$("message").textContent="Kodlar yaradıldı."}catch(e){$("message").textContent=e.message}};
+$("logout").onclick=async()=>{try{await call("/api/admin/logout");location.reload()}catch(e){$("message").textContent=e.message}};
