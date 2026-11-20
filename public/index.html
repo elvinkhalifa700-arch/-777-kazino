@@ -1,5 +1,76 @@
 <!doctype html>
 <html lang="az"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>777 Kazino — virtual oyun</title>
+
+/* MODERN SLOT DESIGN */
+.games {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+.game {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  margin: 0;
+  padding: 20px 14px;
+  border: 2px solid #d5a52e;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top, #49300d, #171006 55%, #080808);
+  box-shadow: 0 0 18px #d49a263d, inset 0 0 20px #000;
+}
+
+.game h3 {
+  color: #ffe08a;
+  font-size: 19px;
+  letter-spacing: 2px;
+  text-shadow: 0 0 12px #ffbf35;
+}
+
+.reels {
+  display: flex;
+  gap: 9px;
+  justify-content: center;
+  padding: 14px 8px;
+  margin: 16px 0;
+  border: 3px solid #d9a52f;
+  border-radius: 17px;
+  background: linear-gradient(135deg,#080808,#292015,#080808);
+  box-shadow: 0 0 20px #ffbd3945;
+}
+
+.reel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 85px;
+  background: linear-gradient(#fff4d5,#d9c18b);
+  color: #9b1717;
+  border: 2px solid #fff0b5;
+  border-radius: 12px;
+  font-size: 39px;
+  flex: 1;
+  box-shadow: inset 0 0 12px #8a5a16;
+}
+
+.reel.spinning {
+  animation: reelMove .12s linear infinite;
+  filter: blur(2px);
+}
+
+@keyframes reelMove {
+  0% { transform: translateY(-5px); }
+  50% { transform: translateY(5px); }
+  100% { transform: translateY(-5px); }
+}
+
+.game .btn {
+  font-size: 17px;
+  padding: 15px;
+  border-radius: 30px;
+  box-shadow: 0 0 16px #f5bd4b77;
+}
 <style>
 :root{--g:#f4c451;--bg:#080808;--p:#17130c;--mut:#c9b98f}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#33220b,#080808 48%);color:#fff;font-family:Arial,sans-serif}.wrap{max-width:520px;margin:auto;padding:14px}.top,.panel,.game{border:1px solid #a9781d;border-radius:16px;background:#100e0a;padding:14px;margin-bottom:12px}.top{display:flex;justify-content:space-between;align-items:center}.logo{font-size:26px;font-weight:900;color:var(--g)}.tag{font-size:11px;color:var(--mut)}h1{text-align:center;color:var(--g);font-size:30px;margin:18px 0 5px}p{color:var(--mut);font-size:13px;line-height:1.5}.balance{font-size:23px;color:var(--g);font-weight:bold}.btn{width:100%;border:1px solid #a9781d;border-radius:11px;padding:12px;background:linear-gradient(#f6d77e,#b97a15);color:#1a1003;font-weight:bold;margin-top:8px;cursor:pointer}input,select{width:100%;padding:12px;border-radius:10px;border:1px solid #71511b;background:#080808;color:white;margin:5px 0}.row{display:flex;gap:8px}.row>*{flex:1}.games{display:grid;grid-template-columns:1fr 1fr;gap:10px}.game{text-align:center;margin:0}.game h3{color:var(--g);font-size:14px}.reels{display:flex;gap:4px;justify-content:center}.reel{background:#f3e5c2;color:#991b12;border-radius:7px;padding:12px 3px;font-size:24px;flex:1}.hidden{display:none}.msg{font-size:12px;color:#ffe3a0;min-height:18px}.small{font-size:11px;color:#a99b78}.listitem{border-top:1px solid #493819;padding:9px 0;font-size:12px}.pill{color:var(--g)}@media(max-width:360px){.games{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
@@ -23,7 +94,26 @@ function msg(id,t){document.getElementById(id).textContent=t}
 async function login(){try{await api('/api/login','POST',{code:document.getElementById('code').value});document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');await refreshMe()}catch(e){msg('loginMsg',e.message)}}
 async function refreshMe(){try{let d=await api('/api/me');document.getElementById('balance').textContent=Number(d.demo_balance).toFixed(2)+' AZN*'}catch(e){msg('loginMsg',e.message)}}
 async function logout(){await api('/api/logout','POST',{});document.getElementById('app').classList.add('hidden');document.getElementById('login').classList.remove('hidden')}
-function spin(prefix){let vals=prefix==='f'?['🍒','🍋','🍇','🍉','🍊','🍓','🥝']:['7️⃣','⭐','🔔','🍀','💎'];for(let i=1;i<=3;i++)document.getElementById(prefix+i).textContent=vals[Math.floor(Math.random()*vals.length)]}
+
+function spin(prefix) {
+  const vals = prefix === 'f'
+    ? ['🍒','🍋','🍇','🍉','🍊','🍓','🥝']
+    : ['7️⃣','⭐','🔔','🍀','💎'];
+
+  const reels = [1, 2, 3].map(i =>
+    document.getElementById(prefix + i)
+  );
+
+  reels.forEach(el => el.classList.add('spinning'));
+
+  setTimeout(() => {
+    reels.forEach(el => {
+      el.textContent = vals[Math.floor(Math.random() * vals.length)];
+      el.classList.remove('spinning');
+    });
+  }, 1400);
+}
+
 async function adminLogin(){try{await api('/api/admin/login','POST',{password:document.getElementById('adminPass').value});document.getElementById('adminLogin').classList.add('hidden');document.getElementById('admin').classList.remove('hidden');loadCustomers()}catch(e){msg('adminMsg',e.message)}}
 async function createCustomer(){try{let d=await api('/api/admin/customers','POST',{});msg('newCode','Yeni müştəri kodu: '+d.code+' — bunu təhlükəsiz şəkildə müştəriyə ver.');loadCustomers()}catch(e){msg('newCode',e.message)}}
 async function loadCustomers(){try{let rows=await api('/api/admin/customers');let el=document.getElementById('customers');el.innerHTML='';rows.forEach(c=>{let div=document.createElement('div');div.className='listitem';let title=document.createElement('div');title.textContent=c.display_code+' · '+Number(c.demo_balance).toFixed(2)+' AZN*';let input=document.createElement('input');input.type='number';input.min='0';input.step='0.01';input.placeholder='Yeni demo göstəricisi';let b=document.createElement('button');b.className='btn';b.textContent='Demo balansı təyin et';b.onclick=async()=>{try{await api('/api/admin/balance','POST',{customerId:c.id,amount:Number(input.value),note:'Admin tərəfindən demo göstəricisi təyin edildi'});loadCustomers()}catch(e){alert(e.message)}};div.append(title,input,b);el.append(div)})}catch(e){msg('adminMsg',e.message)}}
