@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="az">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#090909">
+  <title>777 Kazino — Fruit Slot Demo</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="ambient"></div>
+  <header class="topbar">
+    <a class="brand" href="/"><span class="brand-mark">7</span><span>777 <b>KAZINO</b><small>FRUIT SLOT • DEMO</small></span></a>
+    <div class="top-actions"><span class="demo-pill">● DEMO AZN</span><button id="soundBtn" class="icon-btn" aria-label="Səsi aç və ya bağla">♫ SƏS AÇIQ</button></div>
+  </header>
+  <main class="layout">
+    <section class="welcome">
+      <p class="eyebrow">CLASSIC FRUIT • PREMIUM EDITION</p>
+      <h1>Şansını <span>sına.</span></h1>
+      <p class="sub">Virtual kreditlərlə oynanan əyləncə slotu. Real pul yoxdur.</p>
+    </section>
+
+    <section class="wallet panel">
+      <div><span class="muted tiny">SƏNİN DEMO BALANSIN</span><div class="balance"><strong id="balance">0.00</strong> <small>AZN</small></div></div>
+      <button id="openCode" class="gold-btn">＋ KOD DAXİL ET</button>
+    </section>
+
+    <section class="game-shell">
+      <div class="game-head"><div><span class="eyebrow">777 ORIGINAL</span><h2>FRUIT <em>SLOT</em></h2></div><div class="jackpot-label"><span>TOP UDUŞ</span><b>×50</b></div></div>
+      <div class="machine">
+        <div class="machine-rim">
+          <div class="reels" id="reels" aria-label="Slot meyvələri">
+            <div class="reel-col"><div class="symbol">🍒</div><div class="symbol">🍋</div><div class="symbol">🍇</div></div>
+            <div class="reel-col"><div class="symbol">🍉</div><div class="symbol seven">7</div><div class="symbol">🔔</div></div>
+            <div class="reel-col"><div class="symbol">🍊</div><div class="symbol">💎</div><div class="symbol">🍒</div></div>
+            <div class="payline"><span>777</span></div>
+          </div>
+        </div>
+        <div class="machine-foot"><span>LUCKY FRUIT</span><span>777 • DEMO</span><span>LUCKY FRUIT</span></div>
+      </div>
+
+      <div class="result" id="result" aria-live="polite">OYUNA HAZIRSAN?</div>
+      <div class="bet-row">
+        <div><span class="tiny muted">MƏRC MƏBLƏĞİ</span><div class="bet-choices" id="betChoices">
+          <button data-bet="1">1</button><button data-bet="2">2</button><button data-bet="5" class="selected">5</button><button data-bet="10">10</button><button data-bet="20">20</button><button data-bet="50">50</button>
+        </div></div>
+        <button id="spinBtn" class="spin-btn"><span>FIRLAT</span><small>SPIN</small></button>
+      </div>
+      <div class="game-note">3 eyni simvol orta xəttdə = uduş. Uduş cədvəli: albalı ×4 · limon ×5 · üzüm ×6 · qarpız ×8 · portağal ×10 · zəng ×15 · brilyant ×25 · 7 ×50.</div>
+    </section>
+
+    <section class="history panel">
+      <div class="section-head"><h3>OYUN TARİXÇƏSİ</h3><span class="muted tiny">SON 15 OYUN</span></div>
+      <div id="historyList" class="history-list"><p class="muted">Hələ oyun yoxdur.</p></div>
+    </section>
+    <footer>777 KAZINO DEMO · YALNIZ VİRTUAL AZN · REAL PUL ƏMƏLİYYATI YOXDUR</footer>
+  </main>
+
+  <div class="modal hidden" id="codeModal">
+    <div class="modal-card"><button class="close" id="closeCode">×</button><span class="eyebrow">DEMO BALANS</span><h2>Kodunu daxil et</h2><p class="muted">Admin tərəfindən verilmiş birdəfəlik kodu yaz.</p>
+      <form id="redeemForm"><input id="codeInput" autocomplete="off" placeholder="777-XXXXXXXXXXXX" maxlength="40" required><button class="gold-btn full">BALANSI ARTIR</button></form><p id="codeMessage" class="form-message"></p>
+    </div>
+  </div>
+  <script src="/app.js" defer></script>
+</body></html>
