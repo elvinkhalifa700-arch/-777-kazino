@@ -1,0 +1,10 @@
+{
+  "name": "555-kazino-arcade-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "555 black-and-gold virtual points fruit arcade demo",
+  "main": "server.js",
+  "scripts": {"start": "node server.js", "check": "node --check server.js && node --check public/app.js"},
+  "engines": {"node": ">=20"},
+  "dependencies": {"better-sqlite3": "^11.8.1", "express": "^4.21.2", "express-rate-limit": "^7.5.0", "express-session": "^1.18.1", "connect-sqlite3": "^0.9.15", "helmet": "^8.0.0"}
+}

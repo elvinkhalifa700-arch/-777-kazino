@@ -1,0 +1,45 @@
+'use strict';
+const express=require('express');
+const session=require('express-session');
+const SQLiteStore=require('connect-sqlite3')(session);
+const helmet=require('helmet');
+const rateLimit=require('express-rate-limit');
+const Database=require('better-sqlite3');
+const crypto=require('crypto');
+const fs=require('fs');
+const path=require('path');
+const app=express();
+const PORT=Number(process.env.PORT||3000);
+const SECRET=process.env.SESSION_SECRET;
+const ADMIN_PASSWORD=process.env.ADMIN_PASSWORD;
+if(!SECRET||SECRET.length<32){console.error('SESSION_SECRET must be at least 32 characters');process.exit(1)}
+if(!ADMIN_PASSWORD||ADMIN_PASSWORD.length<12){console.error('ADMIN_PASSWORD must be at least 12 characters');process.exit(1)}
+const DATA_DIR=process.env.DATA_DIR||path.join(__dirname,'data');fs.mkdirSync(DATA_DIR,{recursive:true});
+const db=new Database(path.join(DATA_DIR,'555-kazino.sqlite'));
+db.pragma('journal_mode = WAL');
+db.exec(`CREATE TABLE IF NOT EXISTS players(id TEXT PRIMARY KEY, code_hash TEXT UNIQUE NOT NULL, display_code TEXT NOT NULL, points INTEGER NOT NULL DEFAULT 0 CHECK(points>=0), active INTEGER NOT NULL DEFAULT 1, created_at TEXT DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS history(id INTEGER PRIMARY KEY AUTOINCREMENT,player_id TEXT NOT NULL,score INTEGER NOT NULL,created_at TEXT DEFAULT CURRENT_TIMESTAMP);`);
+app.disable('x-powered-by');app.set('trust proxy',1);
+app.use(helmet({contentSecurityPolicy:{directives:{defaultSrc:["'self'"],scriptSrc:["'self'"],styleSrc:["'self'"],imgSrc:["'self'",'data:'],connectSrc:["'self'"],objectSrc:["'none'"],frameAncestors:["'none'"]}}}));
+app.use(express.json({limit:'10kb'}));
+app.use(session({store:new SQLiteStore({db:'sessions.sqlite',dir:DATA_DIR}),name:'555.sid',secret:SECRET,resave:false,saveUninitialized:false,cookie:{httpOnly:true,sameSite:'lax',secure:process.env.NODE_ENV==='production',maxAge:7*86400000}}));
+const limiter=rateLimit({windowMs:60000,limit:60,standardHeaders:'draft-7',legacyHeaders:false});app.use('/api',limiter);
+const adminLimiter=rateLimit({windowMs:15*60000,limit:8,standardHeaders:'draft-7',legacyHeaders:false});
+const hash=s=>crypto.createHash('sha256').update(s.trim().toUpperCase()).digest('hex');
+const adminOnly=(req,res,next)=>req.session.admin?next():res.status(401).json({error:'Admin girişi tələb olunur.'});
+const playerOnly=(req,res,next)=>req.session.playerId?next():res.status(401).json({error:'Əvvəlcə giriş kodu daxil edin.'});
+const getPlayer=id=>db.prepare('SELECT id,display_code,points FROM players WHERE id=? AND active=1').get(id);
+app.post('/api/login',(req,res)=>{const code=typeof req.body.code==='string'?req.body.code.trim():'';if(!/^[A-Za-z0-9_-]{4,24}$/.test(code))return res.status(400).json({error:'Giriş kodu düzgün deyil.'});const p=db.prepare('SELECT id FROM players WHERE code_hash=? AND active=1').get(hash(code));if(!p)return res.status(401).json({error:'Kod tapılmadı və ya deaktiv edilib.'});req.session.playerId=p.id;res.json({ok:true})});
+app.post('/api/logout',(req,res)=>req.session.destroy(()=>res.json({ok:true})));
+app.get('/api/me',playerOnly,(req,res)=>{const p=getPlayer(req.session.playerId);if(!p){req.session.destroy(()=>{});return res.status(401).json({error:'Hesab deaktivdir.'})}res.json({points:p.points,displayCode:p.display_code})});
+app.get('/api/history',playerOnly,(req,res)=>res.json(db.prepare('SELECT score,created_at FROM history WHERE player_id=? ORDER BY id DESC LIMIT 12').all(req.session.playerId)));
+// Free arcade round: no stake, no balance deduction, no cash value.
+app.post('/api/round',playerOnly,(req,res)=>{const p=getPlayer(req.session.playerId);if(!p)return res.status(401).json({error:'Hesab tapılmadı.'});const symbols=['cherry','lemon','grapes','watermelon','orange','star','seven'];const grid=Array.from({length:3},()=>Array.from({length:5},()=>symbols[crypto.randomInt(symbols.length)]));let score=0;for(const row of grid){const counts={};row.forEach(s=>counts[s]=(counts[s]||0)+1);const max=Math.max(...Object.values(counts));if(max>=3)score+=max===5?50:max===4?20:10;}db.prepare('UPDATE players SET points=points+? WHERE id=?').run(score,p.id);db.prepare('INSERT INTO history(player_id,score) VALUES(?,?)').run(p.id,score);res.json({grid,score,points:getPlayer(p.id).points})});
+app.post('/api/admin/login',adminLimiter,(req,res)=>{const pass=typeof req.body.password==='string'?req.body.password:'';const a=Buffer.from(pass),b=Buffer.from(ADMIN_PASSWORD);if(a.length!==b.length||!crypto.timingSafeEqual(a,b))return res.status(401).json({error:'Admin şifrəsi yanlışdır.'});req.session.admin=true;res.json({ok:true})});
+app.post('/api/admin/logout',adminOnly,(req,res)=>{req.session.admin=false;res.json({ok:true})});
+app.get('/api/admin/players',adminOnly,(req,res)=>res.json(db.prepare('SELECT id,display_code,points,active,created_at FROM players ORDER BY created_at DESC').all()));
+app.post('/api/admin/codes',adminOnly,adminLimiter,(req,res)=>{const points=Number(req.body.points);if(!Number.isSafeInteger(points)||points<0||points>1000000)return res.status(400).json({error:'Xal 0–1,000,000 aralığında tam ədəd olmalıdır.'});let code;do{code='555-'+crypto.randomBytes(5).toString('hex').toUpperCase()}while(db.prepare('SELECT 1 FROM players WHERE code_hash=?').get(hash(code)));const id=crypto.randomUUID();db.prepare('INSERT INTO players(id,code_hash,display_code,points) VALUES(?,?,?,?)').run(id,hash(code),code,points);res.json({code,points})});
+app.patch('/api/admin/players/:id',adminOnly,(req,res)=>{const points=Number(req.body.points);if(!Number.isSafeInteger(points)||points<0||points>1000000)return res.status(400).json({error:'Xal 0–1,000,000 aralığında olmalıdır.'});const result=db.prepare('UPDATE players SET points=? WHERE id=?').run(points,req.params.id);if(!result.changes)return res.status(404).json({error:'İstifadəçi tapılmadı.'});res.json({ok:true})});
+app.post('/api/admin/players/:id/toggle',adminOnly,(req,res)=>{const r=db.prepare('UPDATE players SET active=1-active WHERE id=?').run(req.params.id);if(!r.changes)return res.status(404).json({error:'İstifadəçi tapılmadı.'});res.json({ok:true})});
+app.use(express.static(path.join(__dirname,'public')));app.get('/admin',(req,res)=>res.sendFile(path.join(__dirname,'public','admin.html')));app.get('*',(req,res)=>res.sendFile(path.join(__dirname,'public','index.html')));
+app.listen(PORT,()=>console.log(`555 arcade demo listening on ${PORT}`));
